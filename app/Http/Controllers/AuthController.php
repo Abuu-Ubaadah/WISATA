@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    //login
+    // تسجيل الدخول
     public function login(Request $request)
     {
         $request->validate([
@@ -19,23 +19,23 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        //check user
+        // تأكيد المستخدم
         if (!$user) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'User not found'
+                'message' => 'Accidentally User Is Not Found'
             ], 404);
         }
 
-        //check password
+        // تأكيد كلمة المرور
         if (!Hash::check($request->password, $user->password)) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Password is not match'
+                'message' => 'Password Is Not Actually Match'
             ], 404);
         }
 
-        //generate token
+        // إنشاء الرمز
         $token = $user->createToken('Bearer Token')->plainTextToken;
 
         return response()->json([
@@ -45,14 +45,14 @@ class AuthController extends Controller
     }
 
 
-    //logout
+    // تسجيل الخروج
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Logout successfully'
+            'message' => 'Logout Successfully'
         ]);
     }
 }
